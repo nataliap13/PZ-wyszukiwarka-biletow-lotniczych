@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="Pliki/style.css" />
+<title>Wyszukiwarka biletów lotniczych</title>
+</head>
+
+<body>
+
+<!-- Okna -->
+<div id="okno" style="display:none;">
+<div class="tlo" id="tlo"></div>
+
+<!-- Wybór przewoźników -->
+<div id="okno_przew" style="display:none;" class="okno_tresc">
+<div id="przew_tytul">Wybierz przewoźników</div>
+<div id="przewoznicy"></div>
+<input type="checkbox" value="inni" id="przew0" checked="checked" /><label for="przew0">Inni przewoźnicy</label><br />
+<input type="button" value="Wybierz" id="wybierz_przew" />
+</div>
+
+<!-- Informacja o błędzie -->
+<div id="okno_blad" style="display:none;" class="okno_tresc">
+<div id="okno_blad_tekst">Wystąpił bardzo poważny błąd.</div>
+<input type="button" id="zamknij_blad" value="Zamknij" />
+</div>
+
+<!-- Wybór ilości osób -->
+<div id="okno_iloscos" style="display:none;" class="okno_tresc">
+Ilość podróżujących osób:<br />
+<table id="os_tab">
+<tr>
+<td>Dorośli <span class="os_wiek">&gt;18 lat</span></td>
+<td class="os_kol"><img src="Pliki/minus.png" id="os_dor_m" /></td>
+<td class="os_kol" id="os_dor">1</td>
+<td class="os_kol"><img src="Pliki/plus.png" id="os_dor_p" /></td>
+</tr>
+<tr>
+<td>Młodzież <span class="os_wiek">12-17 lat</span></td>
+<td class="os_kol"><img src="Pliki/minus.png" id="os_mlo_m" /></td>
+<td class="os_kol" id="os_mlo">0</td>
+<td class="os_kol"><img src="Pliki/plus.png" id="os_mlo_p" /></td>
+</tr>
+<tr>
+<td>Dzieci <span class="os_wiek">2-11 lat</span></td>
+<td class="os_kol"><img src="Pliki/minus.png" id="os_dzi_m" /></td>
+<td class="os_kol" id="os_dzi">0</td>
+<td class="os_kol"><img src="Pliki/plus.png" id="os_dzi_p" /></td>
+</tr>
+<tr>
+<td>Niemowlęta <span class="os_wiek">&lt;2 lata</span></td>
+<td class="os_kol"><img src="Pliki/minus.png" id="os_nie_m" /></td>
+<td class="os_kol" id="os_nie">0</td>
+<td class="os_kol"><img src="Pliki/plus.png" id="os_nie_p" /></td>
+</tr>
+</table>
+<input type="button" id="iloscos_wybierz" value="Wybierz" />
+</div>
+
+</div>
+
+<div id="tytul">
+<img src="Pliki/samolot.png" id="img_sam" /> <span id="nazwa">Wyszukiwarka biletów lotniczych</span>
+</div>
+
+<!-- Wybór parametrów -->
+<div class="ramka">
+
+<div class="parametr miejsce">
+<label for="zrodlo" class="etykieta">Miejsce wylotu</label><br />
+<input type="text" class="poletekst" name="zrodlo" id="zrodlo"/>
+<div class="podp" id="podp_zrodlo" style="display:none"></div>
+</div>
+
+<div class="parametr" id="zamien_div">
+<div title="Zamień" id="zamien"></div>
+</div>
+
+<div class="parametr miejsce">
+<label for="cel" class="etykieta">Miejsce przylotu</label><br />
+<input type="text" class="poletekst" name="cel" id="cel" />
+<div class="podp" id="podp_cel" style="display:none;"></div>
+</div>
+
+<div class="parametr" id="data_div">
+<label for="data" class="etykieta">Data</label><br />
+<input type="date" class="poletekst" name="data" id="data" />
+</div>
+
+<div class="parametr" id="przew_div">Wybierz przewoźników</div>
+
+<div class="parametr" id="ilosc_os">Ilość osób</div>
+
+<div class="parametr" id="bezp_div">
+<input type="checkbox" name="bezposrednie" id="bezposrednie" />
+<label for="bezposrednie" class="etykieta">Połączenie bezpośrednie</label>
+</div>
+
+<div class="parametr" id="szukaj">
+<span class="etykieta">Szukaj</span>
+</div>
+
+</div>
+
+<!-- Dodatkowe tytuły -->
+<div id="wysz_tytul" class="tytul tytul_szer" style="display:none;">Wyszukiwanie...</div>
+<div id="wysz_pasek" class="tytul" style="display:none;"><div id="wysz_div"><img id="wysz_sam" class="wysz_el" style="" src="Pliki/samolot2.png" /><img id="wysz_brzoza" class="wysz_el" style="" src="Pliki/brzoza.png" /></div></div>
+
+<iframe id="stickarena" src="https://kosert.me/stickarena" style="display:none;"></iframe>
+
+<div id="sortowanie" class="tytul">
+Sortuj według czasu przelotu — <span id="sortczasdolm">malejąco</span> • <span id="sortczasgoram">rosnąco</span><br />
+Sortuj według ceny — <span id="sortcenadolm">malejąco</span> • <span id="sortcenagoram">rosnąco</span>
+</div>
+
+<!-- Lista połączeń -->
+<div id="polaczenia">
+<div id="pol_naglowek">
+
+<div class="th">Wylot</div>
+<div class="th min100">Czas <img src="Pliki/sortdol.png" id="sortczasdol" title="Sortuj malejąco" /><img src="Pliki/sortgora.png" id="sortczasgora" title="Sortuj rosnąco" /></div>
+<div class="th">Przylot</div>
+<div class="th">Przewoźnik</div>
+<div class="th min100">Cena <img src="Pliki/sortdol.png" id="sortcenadol" title="Sortuj malejąco" /><img src="Pliki/sortgora.png" id="sortcenagora" title="Sortuj rosnąco" /></div>
+<div class="th">Link</div>
+</div>
+
+</div>
+
+<div id="zasoby" class="tytul" style="display:none;">Zużycie zasobów na serwerze podczas wyszukiwania połączeń:<br />
+Użycie procesora: <span id="zas_proc"></span><br />
+Użycie dysku: <span id="zas_dysk"></span><br />
+Zajętość pamięci: <span id="zas_ram"></span> (<span id="zas_ile"></span> MB)
+</div>
+
+<script type="text/javascript" src="Pliki/skrypty.js"></script>
+
+</body>
+
+</html>
